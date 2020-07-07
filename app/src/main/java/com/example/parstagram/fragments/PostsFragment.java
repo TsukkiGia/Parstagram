@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.parstagram.EndlessRecyclerViewScrollListener;
 import com.example.parstagram.Post;
@@ -20,7 +21,9 @@ import com.example.parstagram.PostsAdapter;
 import com.example.parstagram.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +39,7 @@ public class PostsFragment extends Fragment {
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
     private SwipeRefreshLayout swipeContainer;
+    private ProgressBar pbLoading;
 
     public PostsFragment() {
         // Required empty public constructor
@@ -51,6 +55,8 @@ public class PostsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         rvPosts = view.findViewById(R.id.rvPosts);
+        pbLoading = view.findViewById(R.id.pbLoading);
+        pbLoading.setVisibility(View.VISIBLE);
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
@@ -60,7 +66,24 @@ public class PostsFragment extends Fragment {
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-
+                ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+                query.include(Post.KEY_USER);
+                query.whereLessThan(Post.KEY_CREATED_AT, allPosts.get(allPosts.size()-1).getCreatedAt());
+                query.setLimit(20);
+                query.addDescendingOrder(Post.KEY_CREATED_AT);
+                query.findInBackground(new FindCallback<Post>() {
+                    @Override
+                    public void done(List<Post> posts, ParseException e) {
+                        if (e != null) {
+                            Log.e(TAG, "problem!", e);
+                        }
+                        for (Post post : posts) {
+                            Log.i(TAG,"Description: "+post.getDescription()+", User: "+post.getUser().getUsername());
+                        }
+                        allPosts.addAll(posts);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
         };
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -94,6 +117,7 @@ public class PostsFragment extends Fragment {
                 adapter.addAll(posts);
                 adapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
+                pbLoading.setVisibility(View.INVISIBLE);
             }
         });
     }

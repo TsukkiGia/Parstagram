@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.parstagram.MainActivity;
@@ -49,6 +50,7 @@ public class ComposeFragment extends Fragment {
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private File photoFile;
     private String photoFileName = "photo.jpg";
+    private ProgressBar pbLoading;
     public ComposeFragment() {
         // Required empty public constructor
     }
@@ -64,6 +66,8 @@ public class ComposeFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        pbLoading = view.findViewById(R.id.pbLoading);
+        pbLoading.setVisibility(View.INVISIBLE);
         etDescription = view.findViewById(R.id.etDescription);
         ivMedia = view.findViewById(R.id.ivMedia);
         btnCapture = view.findViewById(R.id.btnCapture);
@@ -72,14 +76,17 @@ public class ComposeFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
+                pbLoading.setVisibility(View.VISIBLE);
                 String description = etDescription.getText().toString();
                 if (description.isEmpty()) {
                     Toast.makeText(getContext(), "Can't be empty", Toast.LENGTH_SHORT).show();
+                    pbLoading.setVisibility(View.INVISIBLE);
                     return;
                 }
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 if (photoFile == null || ivMedia.getDrawable() == null) {
                     Toast.makeText(getContext(), "Image empty", Toast.LENGTH_SHORT).show();
+                    pbLoading.setVisibility(View.INVISIBLE);
                     return;
                 } else {
                     savePost(description, currentUser, photoFile);
@@ -89,6 +96,7 @@ public class ComposeFragment extends Fragment {
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pbLoading.setVisibility(View.VISIBLE);
                 launchCamera();
             }
         });
@@ -118,6 +126,7 @@ public class ComposeFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        pbLoading.setVisibility(View.INVISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
@@ -159,11 +168,13 @@ public class ComposeFragment extends Fragment {
                 if (e!=null) {
                     Log.e(TAG,"Error while saving",e);
                     Toast.makeText(getContext(), "Error while saving",Toast.LENGTH_SHORT).show();
+                    pbLoading.setVisibility(View.INVISIBLE);
                     return;
                 }
                 Log.i(TAG,"Save successful");
                 etDescription.setText("");
                 ivMedia.setImageResource(0);
+                pbLoading.setVisibility(View.INVISIBLE);
             }
         });
     }

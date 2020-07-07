@@ -19,8 +19,8 @@ public class Post extends ParseObject {
 
     public Post() {
     }
-    public Date getCreatedAt() {
-        return getDate(KEY_CREATED_AT);
+    public Date getTime() {
+        return this.getCreatedAt();
     }
 
     public String getDescription() {
