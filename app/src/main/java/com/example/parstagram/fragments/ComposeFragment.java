@@ -56,7 +56,7 @@ public class ComposeFragment extends Fragment {
     }
 
 
-    //called when Fragment sets up its view hierarcj
+    //called when Fragment sets up its view hierarchy
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -102,7 +102,6 @@ public class ComposeFragment extends Fragment {
         });
         super.onViewCreated(view, savedInstanceState);
     }
-
 
     private void launchCamera() {
         // create Intent to take a picture and return control to the calling application
@@ -154,7 +153,6 @@ public class ComposeFragment extends Fragment {
 
         // Return the file target for the photo based on filename
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
-
     }
 
     private void savePost(String description, ParseUser currentUser, File photoFile) {

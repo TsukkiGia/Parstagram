@@ -40,4 +40,12 @@
         android:layout_below="@+id/etPassword"
         android:layout_marginTop="35dp"
         android:text="Login" />
+
+    <Button
+        android:id="@+id/btnSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnLogin"
+        android:layout_marginTop="24dp"
+        android:text="Sign Up" />
 </RelativeLayout>

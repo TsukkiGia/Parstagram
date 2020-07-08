@@ -69,6 +69,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private ImageView ivImage;
         private TextView tvUsername;
         private TextView tvTimeCreated;
+        private ImageView ivProfileImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -76,6 +77,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivImage = itemView.findViewById(R.id.ivImage);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvTimeCreated = itemView.findViewById(R.id.tvTimeCreated);
+            ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             itemView.setOnClickListener(this);
         }
         private static final int SECOND_MILLIS = 1000;
@@ -121,6 +123,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ParseFile image = post.getImage();
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
+                Glide.with(context).load(post.getUser().getParseFile("ProfileImage").getUrl()).into(ivProfileImage);
             }
             tvTimeCreated.setText(getRelativeTimeAgo(post.getTime().toString()));
         }

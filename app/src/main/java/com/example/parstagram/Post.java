@@ -19,6 +19,7 @@ public class Post extends ParseObject {
 
     public Post() {
     }
+
     public Date getTime() {
         return this.getCreatedAt();
     }
