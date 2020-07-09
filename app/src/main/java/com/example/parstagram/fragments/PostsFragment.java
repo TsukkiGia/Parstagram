@@ -68,7 +68,7 @@ public class PostsFragment extends Fragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
                 query.include(Post.KEY_USER);
-                query.whereLessThan(Post.KEY_CREATED_AT, allPosts.get(allPosts.size()-1).getCreatedAt());
+                query.setSkip(page*20);
                 query.setLimit(20);
                 query.addDescendingOrder(Post.KEY_CREATED_AT);
                 query.findInBackground(new FindCallback<Post>() {
@@ -86,6 +86,7 @@ public class PostsFragment extends Fragment {
                 });
             }
         };
+        rvPosts.addOnScrollListener(scrollListener);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

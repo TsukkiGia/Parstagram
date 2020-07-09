@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,7 +30,9 @@ import com.bumptech.glide.Glide;
 import com.example.parstagram.EndlessRecyclerViewScrollListener;
 import com.example.parstagram.Post;
 import com.example.parstagram.PostsAdapter;
+import com.example.parstagram.ProfileDetails;
 import com.example.parstagram.R;
+import com.example.parstagram.SquarePostsAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -51,7 +54,7 @@ public class ProfileFragment extends Fragment {
     RecyclerView rvPosts;
     private EndlessRecyclerViewScrollListener scrollListener;
     public static final String TAG = "ProfileFragment";
-    protected PostsAdapter adapter;
+    protected SquarePostsAdapter adapter;
     protected List<Post> allPosts;
     private ProgressBar pbLoading;
     private TextView tvUsername;
@@ -81,7 +84,7 @@ public class ProfileFragment extends Fragment {
         tvUsername = view.findViewById(R.id.tvUsername);
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
         ParseFile file = ParseUser.getCurrentUser().getParseFile("ProfileImage");
-        Glide.with(getContext()).load(file.getUrl()).into(ivProfileImage);
+        Glide.with(getContext()).load(file.getUrl()).circleCrop().into(ivProfileImage);
         btnChange = view.findViewById(R.id.btnChange);
         btnChange.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,13 +92,14 @@ public class ProfileFragment extends Fragment {
                launchCamera();
                ParseUser.getCurrentUser().put("ProfileImage",new ParseFile(photoFile));
                ParseUser.getCurrentUser().saveInBackground();
+               ParseFile file = ParseUser.getCurrentUser().getParseFile("ProfileImage");
             }
         });
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
-        adapter = new PostsAdapter(getContext(), allPosts);
+        adapter = new SquarePostsAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        rvPosts.setLayoutManager(linearLayoutManager);
+        rvPosts.setLayoutManager(new GridLayoutManager(getContext(),3));
         queryPosts();
     }
 
@@ -104,6 +108,7 @@ public class ProfileFragment extends Fragment {
         query.include(Post.KEY_USER);
         query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
         query.setLimit(20);
+
         query.addDescendingOrder(Post.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Post>() {
             @Override
@@ -146,11 +151,8 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                // by this point we have the camera photo on disk
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                // RESIZE BITMAP, see section below
-                // Load the taken image into a preview
-                ivProfileImage.setImageBitmap(takenImage);
+                ParseFile file = ParseUser.getCurrentUser().getParseFile("ProfileImage");
+                Glide.with(getContext()).load(file.getUrl()).circleCrop().into(ivProfileImage);
             } else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -162,12 +164,10 @@ public class ProfileFragment extends Fragment {
         // Use `getExternalFilesDir` on Context to access package-specific directories.
         // This way, we don't need to request external read/write runtime permissions.
         File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
-
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
             Log.d(TAG, "failed to create directory");
         }
-
         // Return the file target for the photo based on filename
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }

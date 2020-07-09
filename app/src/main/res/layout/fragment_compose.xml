@@ -4,38 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="15dp"
     tools:context=".MainActivity">
 
     <EditText
         android:id="@+id/etDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="310dp"
         android:ems="10"
-        android:hint="Description..." />
+        android:hint="Description..."
+        android:inputType="textMultiLine" />
 
     <Button
         android:id="@+id/btnCapture"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etDescription"
-        android:layout_marginTop="46dp"
-        android:text="Take Picture" />
+        android:layout_below="@+id/btnSubmit"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="117dp"
+        android:backgroundTint="#D6386E"
+        android:text="Capture"
+        android:textColor="#FFFFFF" />
 
     <ImageView
         android:id="@+id/ivMedia"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@+id/btnCapture"
-        android:layout_marginTop="54dp"
+        android:layout_height="233dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="29dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <Button
         android:id="@+id/btnSubmit"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivMedia"
-        android:layout_marginTop="90dp"
-        android:text="Submit" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="136dp"
+        android:layout_marginEnd="116dp"
+        android:backgroundTint="#009688"
+        android:shadowColor="#009688"
+        android:text="Post"
+        android:textColor="#FFFFFF" />
 
     <ProgressBar
         android:id="@+id/pbLoading"
@@ -43,8 +56,8 @@
         android:layout_height="100dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="302dp"
-        android:layout_marginEnd="151dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="146dp"
         android:visibility="visible" />
 
 </RelativeLayout>

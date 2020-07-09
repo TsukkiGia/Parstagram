@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
@@ -70,6 +71,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private TextView tvUsername;
         private TextView tvTimeCreated;
         private ImageView ivProfileImage;
+        private ImageView ivLike;
+        private ImageView ivComment;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,7 +81,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvTimeCreated = itemView.findViewById(R.id.tvTimeCreated);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
-            itemView.setOnClickListener(this);
+            ivComment = itemView.findViewById(R.id.ivComment);
+            ivLike = itemView.findViewById(R.id.ivLike);
+            ivImage.setOnClickListener(this);
+            ivProfileImage.setOnClickListener(this);
         }
         private static final int SECOND_MILLIS = 1000;
         private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -95,17 +101,17 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 long now = System.currentTimeMillis();
                 final long diff = now - time;
                 if (diff < MINUTE_MILLIS) {
-                    return "just now";
+                    return "Just now";
                 } else if (diff < 2 * MINUTE_MILLIS) {
-                    return "a minute ago";
+                    return "A minute ago";
                 } else if (diff < 50 * MINUTE_MILLIS) {
                     return diff / MINUTE_MILLIS + " m";
                 } else if (diff < 90 * MINUTE_MILLIS) {
-                    return "an hour ago";
+                    return "An hour ago";
                 } else if (diff < 24 * HOUR_MILLIS) {
                     return diff / HOUR_MILLIS + " h";
                 } else if (diff < 48 * HOUR_MILLIS) {
-                    return "yesterday";
+                    return "Yesterday";
                 } else {
                     return diff / DAY_MILLIS + " d";
                 }
@@ -123,7 +129,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ParseFile image = post.getImage();
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
-                Glide.with(context).load(post.getUser().getParseFile("ProfileImage").getUrl()).into(ivProfileImage);
+                Glide.with(context).load(post.getUser().getParseFile("ProfileImage").getUrl()).circleCrop().into(ivProfileImage);
             }
             tvTimeCreated.setText(getRelativeTimeAgo(post.getTime().toString()));
         }
@@ -131,10 +137,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            Post post = posts.get(position);
-            Intent i = new Intent(context, PostDetails.class);
-            i.putExtra(Post.class.getSimpleName(), Parcels.wrap(post));
-            context.startActivity(i);
+            if (view.getId()==ivImage.getId()) {
+                Post post = posts.get(position);
+                Intent i = new Intent(context, PostDetails.class);
+                i.putExtra(Post.class.getSimpleName(), Parcels.wrap(post));
+                context.startActivity(i);
+            }
+            if (view.getId()==ivProfileImage.getId()) {
+                ParseUser user = posts.get(position).getUser();
+                Intent i = new Intent(context, ProfileDetails.class);
+                i.putExtra(ParseUser.class.getSimpleName(), Parcels.wrap(user));
+                context.startActivity(i)
+                ;
+            }
         }
     }
 }

@@ -3,35 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="8dp">
-
-    <ImageView
-        android:id="@+id/ivImage"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_below="@+id/tvUsername"
-        android:layout_marginTop="30dp"
-        android:scaleType="centerCrop"
-        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tvDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTimeCreated"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="11dp"
         android:layout_marginBottom="8dp"
         tools:text="Look at me flexing" />
+
+    <ImageView
+        android:id="@+id/ivImage"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@+id/tvUsername"
+        android:layout_marginTop="21dp"
+        android:scaleType="centerCrop"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tvTimeCreated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ivImage"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="42dp"
-        android:layout_marginEnd="359dp"
+        android:layout_below="@+id/ivLike"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="8dp"
         android:textColor="#000000"
         tools:text="19:02" />
 
@@ -39,16 +39,35 @@
         android:id="@+id/ivProfileImage"
         android:layout_width="39dp"
         android:layout_height="34dp"
-        android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tvUsername"
         android:layout_width="87dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="258dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="6dp"
+        android:layout_toEndOf="@+id/ivProfileImage"
         android:textColor="#000000"
         android:textStyle="bold"
         tools:text="Gianna" />
+
+    <ImageView
+        android:id="@+id/ivLike"
+        android:layout_width="28dp"
+        android:layout_height="27dp"
+        android:layout_below="@+id/ivImage"
+        android:layout_marginTop="15dp"
+        app:srcCompat="@drawable/ufi_heart" />
+
+    <ImageView
+        android:id="@+id/ivComment"
+        android:layout_width="28dp"
+        android:layout_height="27dp"
+        android:layout_below="@+id/ivImage"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_toEndOf="@+id/ivLike"
+        app:srcCompat="@drawable/ufi_comment" />
 </RelativeLayout>
