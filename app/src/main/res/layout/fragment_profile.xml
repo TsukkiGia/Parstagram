@@ -18,7 +18,7 @@
         android:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPosts"
+        android:id="@+id/rvSquarePosts"
         android:layout_width="match_parent"
         android:layout_height="551dp"
         android:layout_below="@+id/btnChange"

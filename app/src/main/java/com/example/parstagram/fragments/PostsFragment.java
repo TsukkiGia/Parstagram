@@ -21,9 +21,7 @@ import com.example.parstagram.PostsAdapter;
 import com.example.parstagram.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +52,7 @@ public class PostsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        rvPosts = view.findViewById(R.id.rvPosts);
+        rvPosts = view.findViewById(R.id.rvSquarePosts);
         pbLoading = view.findViewById(R.id.pbLoading);
         pbLoading.setVisibility(View.VISIBLE);
         allPosts = new ArrayList<>();

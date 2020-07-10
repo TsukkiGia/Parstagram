@@ -7,7 +7,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -23,7 +26,10 @@ public class ProfileDetails extends AppCompatActivity {
     SquarePostsAdapter adapter;
     List<Post> posts;
     ParseUser user;
+    TextView tvUsername;
+    ImageView ivProfileImage;
     public static final String TAG = "Profile of User";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +37,10 @@ public class ProfileDetails extends AppCompatActivity {
         user = Parcels.unwrap(getIntent().getParcelableExtra(ParseUser.class.getSimpleName()));
         setContentView(R.layout.activity_profile_details);
         rvSquarePosts = findViewById(R.id.rvSquarePosts);
+        ivProfileImage = findViewById(R.id.ivProfileImage);
+        tvUsername = findViewById(R.id.tvUsername);
+        Glide.with(ProfileDetails.this).load(user.getParseFile("ProfileImage").getUrl()).circleCrop().into(ivProfileImage);
+        tvUsername.setText(user.getUsername());
         posts = new ArrayList<>();
         adapter = new SquarePostsAdapter(ProfileDetails.this,posts);
         rvSquarePosts.setLayoutManager(new GridLayoutManager(ProfileDetails.this,3));

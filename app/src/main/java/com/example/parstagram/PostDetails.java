@@ -34,6 +34,7 @@ public class PostDetails extends AppCompatActivity {
     TextView tvDescription;
     TextView tvUsername;
     ImageView ivProfile;
+    ImageView ivMedia;
     EditText etComment;
     public static final String TAG = "PostDetails";
     CommentsAdapter adapter;
@@ -50,6 +51,7 @@ public class PostDetails extends AppCompatActivity {
         tvDescription = findViewById(R.id.tvDescription);
         rvComments = findViewById(R.id.rvComments);
         ivProfile = findViewById(R.id.ivProfileImage);
+        ivMedia = findViewById(R.id.ivMedia);
         tvUsername = findViewById(R.id.tvUsername);
         btnComment = findViewById(R.id.btnComment);
         adapter = new CommentsAdapter(comments, PostDetails.this);
@@ -62,7 +64,7 @@ public class PostDetails extends AppCompatActivity {
         btnComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Comment comment = new Comment();
+                final Comment comment = new Comment();
                 comment.setPost(post);
                 comment.setUser(ParseUser.getCurrentUser());
                 comment.setText(etComment.getText().toString());
@@ -75,6 +77,8 @@ public class PostDetails extends AppCompatActivity {
                             return;
                         }
                         Log.i(TAG,"Save successful");
+                        comments.add(comments.size(),comment);
+                        adapter.notifyItemInserted(comments.size()-1);
                         etComment.setText("");
                     }
                 });
@@ -82,6 +86,7 @@ public class PostDetails extends AppCompatActivity {
             }
         });
         Glide.with(PostDetails.this).load(post.getUser().getParseFile("ProfileImage").getUrl()).circleCrop().into(ivProfile);
+        Glide.with(PostDetails.this).load(post.getParseFile(Post.KEY_IMAGE).getUrl()).centerCrop().into(ivMedia);
         queryComments();
     }
     private static final int SECOND_MILLIS = 1000;

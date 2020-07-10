@@ -11,9 +11,9 @@
         android:id="@+id/tvDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ivProfileImage"
-        android:layout_marginStart="-31dp"
-        android:layout_marginTop="6dp"
+        android:layout_below="@+id/ivMedia"
+        android:layout_marginStart="-32dp"
+        android:layout_marginTop="32dp"
         android:layout_marginBottom="0dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         tools:text="Look at me flexing" />
@@ -40,10 +40,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvComments"
         android:layout_width="match_parent"
-        android:layout_height="584dp"
+        android:layout_height="328dp"
         android:layout_above="@+id/etComment"
         android:layout_below="@+id/tvDescription"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="7dp" />
 
     <ImageView
@@ -63,4 +63,12 @@
         android:textColor="#000000"
         android:textStyle="bold"
         tools:text="GG5642" />
+
+    <ImageView
+        android:id="@+id/ivMedia"
+        android:layout_width="match_parent"
+        android:layout_height="222dp"
+        android:layout_below="@+id/tvUsername"
+        android:layout_marginTop="17dp"
+        tools:srcCompat="@tools:sample/avatars" />
 </RelativeLayout>

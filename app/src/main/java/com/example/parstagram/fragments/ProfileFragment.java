@@ -1,8 +1,6 @@
 package com.example.parstagram.fragments;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -29,8 +27,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.parstagram.EndlessRecyclerViewScrollListener;
 import com.example.parstagram.Post;
-import com.example.parstagram.PostsAdapter;
-import com.example.parstagram.ProfileDetails;
 import com.example.parstagram.R;
 import com.example.parstagram.SquarePostsAdapter;
 import com.parse.FindCallback;
@@ -38,7 +34,6 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -77,7 +72,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        rvPosts = view.findViewById(R.id.rvPosts);
+        rvPosts = view.findViewById(R.id.rvSquarePosts);
         pbLoading = view.findViewById(R.id.pbLoading);
         pbLoading.setVisibility(View.VISIBLE);
         allPosts = new ArrayList<>();
