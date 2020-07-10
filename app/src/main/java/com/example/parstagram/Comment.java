@@ -12,7 +12,10 @@ public class Comment extends ParseObject {
     public static final String KEY_POST = "postID";
     public static final String KEY_USER = "user";
     public static final String KEY_TEXT = "text";
-    
+
+    public Comment() {
+    }
+
     public ParseObject getPostRelation() {
         return getParseObject(KEY_POST);
     }
@@ -30,7 +33,7 @@ public class Comment extends ParseObject {
     }
 
     public String getText() {
-        return getString(KEY_USER);
+        return getString(KEY_TEXT);
     }
 
     public void setText(String string) {

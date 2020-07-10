@@ -1,50 +1,88 @@
 package com.example.parstagram;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.parse.FindCallback;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class PostDetails extends AppCompatActivity {
     Post post;
     TextView tvDescription;
-    ImageView ivImage;
     TextView tvUsername;
-    TextView tvDateTime;
     ImageView ivProfile;
     EditText etComment;
+    public static final String TAG = "PostDetails";
+    CommentsAdapter adapter;
+    List<Comment> comments;
+    RecyclerView rvComments;
+    Button btnComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
         post = Parcels.unwrap(getIntent().getParcelableExtra(Post.class.getSimpleName()));
-        ivImage = findViewById(R.id.ivImage);
+        comments = new ArrayList<>();
         tvDescription = findViewById(R.id.tvDescription);
-        tvUsername = findViewById(R.id.tvUsername);
+        rvComments = findViewById(R.id.rvComments);
         ivProfile = findViewById(R.id.ivProfileImage);
-        tvDateTime = findViewById(R.id.tvTimeCreated);
+        tvUsername = findViewById(R.id.tvUsername);
+        btnComment = findViewById(R.id.btnComment);
+        adapter = new CommentsAdapter(comments, PostDetails.this);
+        rvComments.setAdapter(adapter);
+        rvComments.setLayoutManager(new LinearLayoutManager(this));
         tvUsername.setText(post.getUser().getUsername());
         etComment = findViewById(R.id.etComment);
         tvDescription.setText(post.getDescription());
         ParseFile image = post.getImage();
-        if (image != null) {
-            Glide.with(PostDetails.this).load(image.getUrl()).into(ivImage);
-            Glide.with(PostDetails.this).load(post.getUser().getParseFile("ProfileImage").getUrl()).circleCrop().into(ivProfile);
-        }
-        tvDateTime.setText(getRelativeTimeAgo(post.getCreatedAt().toString()));
+        btnComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Comment comment = new Comment();
+                comment.setPost(post);
+                comment.setUser(ParseUser.getCurrentUser());
+                comment.setText(etComment.getText().toString());
+                comment.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(com.parse.ParseException e) {
+                        if (e!=null) {
+                            Log.e(TAG,"Error while saving",e);
+                            Toast.makeText(PostDetails.this, "Error while saving",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        Log.i(TAG,"Save successful");
+                        etComment.setText("");
+                    }
+                });
+
+            }
+        });
+        Glide.with(PostDetails.this).load(post.getUser().getParseFile("ProfileImage").getUrl()).circleCrop().into(ivProfile);
+        queryComments();
     }
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -80,5 +118,24 @@ public class PostDetails extends AppCompatActivity {
             e.printStackTrace();
         }
         return "";
+    }
+    protected void queryComments() {
+        ParseQuery<Comment> query = ParseQuery.getQuery(Comment.class);
+        query.include(Comment.KEY_USER);
+        query.setLimit(20);
+        query.findInBackground(new FindCallback<Comment>() {
+            @Override
+            public void done(List<Comment> comments, com.parse.ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "problem!", e);
+                }
+                for (Comment comment : comments) {
+                    Log.i(TAG,"Description: "+comment.getText()+", User: "+comment.getUser().getUsername());
+                }
+                adapter.clear();
+                adapter.addAll(comments);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 }

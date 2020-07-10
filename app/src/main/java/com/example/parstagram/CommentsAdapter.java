@@ -1,6 +1,7 @@
 package com.example.parstagram;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.parse.ParseUser;
 
 import java.util.List;
 
@@ -22,7 +24,16 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         this.comments = comments;
         this.context = context;
     }
+    public void clear() {
+        comments.clear();
+        notifyDataSetChanged();
+    }
 
+    // Add a list of items -- change to type used
+    public void addAll(List<Comment> list) {
+        comments.addAll(list);
+        notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -53,7 +64,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
 
         public void bind(Comment comment) {
             tvComment.setText(comment.getText());
-            Glide.with(context).load(comment.getUser().getParseFile("PostImage").getUrl()).circleCrop().into(ivProfileImage);
+            Glide.with(context).load(comment.getUser().getParseFile("ProfileImage").getUrl()).circleCrop().into(ivProfileImage);
         }
     }
 }
