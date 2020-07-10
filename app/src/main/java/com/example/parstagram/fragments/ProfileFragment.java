@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.example.parstagram.EndlessRecyclerViewScrollListener;
 import com.example.parstagram.LoginActivity;
 import com.example.parstagram.Post;
+import com.example.parstagram.PostDetails;
 import com.example.parstagram.R;
 import com.example.parstagram.SquarePostsAdapter;
 import com.parse.FindCallback;
@@ -35,6 +36,8 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import org.parceler.Parcels;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -87,7 +90,10 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ParseUser.getCurrentUser().logOut();
-                //how would you finish?
+                //how would you finish
+                Intent i = new Intent(getContext(), LoginActivity.class);
+                getContext().startActivity(i);
+                getActivity().finish();
             }
         });
         btnChange = view.findViewById(R.id.btnChange);
