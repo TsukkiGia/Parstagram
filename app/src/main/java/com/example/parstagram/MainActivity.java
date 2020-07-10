@@ -13,6 +13,7 @@ import com.example.parstagram.fragments.ComposeFragment;
 import com.example.parstagram.fragments.PostsFragment;
 import com.example.parstagram.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.ParseObject;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;

@@ -2,6 +2,7 @@ package com.example.parstagram;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +11,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.parstagram.fragments.ComposeFragment;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
@@ -85,6 +90,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivLike = itemView.findViewById(R.id.ivLike);
             ivImage.setOnClickListener(this);
             ivProfileImage.setOnClickListener(this);
+            ivLike.setOnClickListener(this);
+            ivComment.setOnClickListener(this);
+            ivLike.setTag(R.drawable.ufi_heart);
         }
         private static final int SECOND_MILLIS = 1000;
         private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -119,7 +127,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 Log.i("TAG", "getRelativeTimeAgo failed");
                 e.printStackTrace();
             }
-
             return "";
         }
 
@@ -137,7 +144,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            if (view.getId()==ivImage.getId()) {
+            if (view.getId()==ivImage.getId() || view.getId()==ivComment.getId()) {
                 Post post = posts.get(position);
                 Intent i = new Intent(context, PostDetails.class);
                 i.putExtra(Post.class.getSimpleName(), Parcels.wrap(post));
@@ -147,8 +154,20 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 ParseUser user = posts.get(position).getUser();
                 Intent i = new Intent(context, ProfileDetails.class);
                 i.putExtra(ParseUser.class.getSimpleName(), Parcels.wrap(user));
-                context.startActivity(i)
-                ;
+                i.putExtra("like",(Integer)ivLike.getTag());
+                context.startActivity(i);
+            }
+            if (view.getId() == ivLike.getId()){
+                if ((Integer) ivLike.getTag()==R.drawable.ufi_heart) {
+                    ivLike.setImageDrawable(context.getResources().getDrawable(R.drawable.ufi_heart_active));
+                    ivLike.setTag(R.drawable.ufi_heart_active);
+                    ivLike.setColorFilter(Color.RED);
+                }
+                else {
+                    ivLike.setImageDrawable(context.getResources().getDrawable(R.drawable.ufi_heart));
+                    ivLike.setTag(R.drawable.ufi_heart);
+                    ivLike.setColorFilter(Color.BLACK);
+                }
             }
         }
     }
