@@ -20,7 +20,11 @@ import com.example.parstagram.fragments.ComposeFragment;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.text.DateFormat;
@@ -30,17 +34,14 @@ import java.util.List;
 import java.util.Locale;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
-    public interface OnClickListener {
-        void onItemClicked (int position);
-    }
-    private OnClickListener onClickListener;
+
+
     private Context context;
     private List<Post> posts;
 
     public PostsAdapter(Context context, List<Post> posts) {
         this.context = context;
         this.posts = posts;
-        this.onClickListener = onClickListener;
     }
     public void clear() {
         posts.clear();
@@ -78,6 +79,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private ImageView ivProfileImage;
         private ImageView ivLike;
         private ImageView ivComment;
+        private TextView tvLikes;
+        int likes;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,6 +90,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvTimeCreated = itemView.findViewById(R.id.tvTimeCreated);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             ivComment = itemView.findViewById(R.id.ivComment);
+            tvLikes = itemView.findViewById(R.id.tvLikes);
             ivLike = itemView.findViewById(R.id.ivLike);
             ivImage.setOnClickListener(this);
             ivProfileImage.setOnClickListener(this);
@@ -131,12 +135,42 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         }
 
         public void bind(Post post) {
+            Boolean didILike=false;
             tvUsername.setText(post.getUser().getUsername());
             tvDescription.setText(post.getDescription());
+            JSONArray likers = post.getLikes();
+            for (int i = 0; i<likers.length();i++) {
+                try {
+                    JSONObject user = (JSONObject) likers.get(i);
+                    String userID = user.getString("objectId");
+                    if (userID.equals(ParseUser.getCurrentUser().getObjectId())) {
+                        didILike=true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            likes = likers.length();
             ParseFile image = post.getImage();
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
                 Glide.with(context).load(post.getUser().getParseFile("ProfileImage").getUrl()).circleCrop().into(ivProfileImage);
+            }
+            if (didILike){
+                ivLike.setImageDrawable(context.getResources().getDrawable(R.drawable.ufi_heart_active));
+                ivLike.setTag(R.drawable.ufi_heart_active);
+                ivLike.setColorFilter(Color.RED);
+            }
+            else {
+                ivLike.setImageDrawable(context.getResources().getDrawable(R.drawable.ufi_heart));
+                ivLike.setTag(R.drawable.ufi_heart);
+                ivLike.setColorFilter(Color.BLACK);
+            }
+            if (likes!=1) {
+                tvLikes.setText(String.valueOf(likes) + " likes");
+            }
+            else {
+                tvLikes.setText("1 like");
             }
             tvTimeCreated.setText(getRelativeTimeAgo(post.getTime().toString()));
         }
@@ -162,11 +196,57 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     ivLike.setImageDrawable(context.getResources().getDrawable(R.drawable.ufi_heart_active));
                     ivLike.setTag(R.drawable.ufi_heart_active);
                     ivLike.setColorFilter(Color.RED);
+                    likes++;
+                    if (likes!=1) {
+                        tvLikes.setText(String.valueOf(likes) + " likes");
+                    }
+                    else {
+                        tvLikes.setText("1 like");
+                    }
+                    Post post = posts.get(getAdapterPosition());
+                    JSONArray likers = post.getLikes();
+                    likers.put(ParseUser.getCurrentUser());
+                    post.setLikes(likers);
+                    post.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(com.parse.ParseException e) {
+                            Log.i("try","try");
+                        }
+                    });
                 }
                 else {
                     ivLike.setImageDrawable(context.getResources().getDrawable(R.drawable.ufi_heart));
                     ivLike.setTag(R.drawable.ufi_heart);
                     ivLike.setColorFilter(Color.BLACK);
+                    likes--;
+                    if (likes!=1) {
+                        tvLikes.setText(String.valueOf(likes) + " likes");
+                    }
+                    else {
+                        tvLikes.setText("1 like");
+                    }
+                    Post post = posts.get(getAdapterPosition());
+                    int index = 0;
+                    JSONArray likers = post.getLikes();
+                    for (int i = 0; i<likers.length()-1;i++) {
+                        try {
+                            ParseUser user = (ParseUser) likers.get(i);
+                            if (user.equals(ParseUser.getCurrentUser())) {
+                                index=i;
+                                break;
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    likers.remove(index);
+                    post.setLikes(likers);
+                    post.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(com.parse.ParseException e) {
+                            Log.i("try","try");
+                        }
+                    });
                 }
             }
         }

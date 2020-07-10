@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,9 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.text.ParseException;
@@ -41,12 +45,106 @@ public class PostDetails extends AppCompatActivity {
     List<Comment> comments;
     RecyclerView rvComments;
     Button btnComment;
+    ImageView ivLike;
+    TextView tvLikes;
+    int likes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
         post = Parcels.unwrap(getIntent().getParcelableExtra(Post.class.getSimpleName()));
+        ivLike = findViewById(R.id.ivLike);
+        tvLikes = findViewById(R.id.tvLikes);
+        Boolean didILike=false;
+        JSONArray likers = post.getLikes();
+        for (int i = 0; i<likers.length();i++) {
+            try {
+                JSONObject user = (JSONObject) likers.get(i);
+                String userID = user.getString("objectId");
+                if (userID.equals(ParseUser.getCurrentUser().getObjectId())) {
+                    didILike=true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        likes = likers.length();
+        if (likes!=1) {
+            tvLikes.setText(String.valueOf(likes) + " likes");
+        }
+        else {
+            tvLikes.setText("1 like");
+        }
+        if (didILike){
+            ivLike.setImageDrawable(getResources().getDrawable(R.drawable.ufi_heart_active));
+            ivLike.setTag(R.drawable.ufi_heart_active);
+            ivLike.setColorFilter(Color.RED);
+        }
+        else {
+            ivLike.setImageDrawable(getResources().getDrawable(R.drawable.ufi_heart));
+            ivLike.setTag(R.drawable.ufi_heart);
+            ivLike.setColorFilter(Color.BLACK);
+        }
+        ivLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if ((Integer) ivLike.getTag()==R.drawable.ufi_heart) {
+                    ivLike.setImageDrawable(getResources().getDrawable(R.drawable.ufi_heart_active));
+                    ivLike.setTag(R.drawable.ufi_heart_active);
+                    ivLike.setColorFilter(Color.RED);
+                    likes++;
+                    if (likes!=1) {
+                        tvLikes.setText(String.valueOf(likes) + " likes");
+                    }
+                    else {
+                        tvLikes.setText("1 like");
+                    }
+                    JSONArray likers = post.getLikes();
+                    likers.put(ParseUser.getCurrentUser());
+                    post.setLikes(likers);
+                    post.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(com.parse.ParseException e) {
+                            Log.i("try","try");
+                        }
+                    });
+                }
+                else {
+                    ivLike.setImageDrawable(getResources().getDrawable(R.drawable.ufi_heart));
+                    ivLike.setTag(R.drawable.ufi_heart);
+                    ivLike.setColorFilter(Color.BLACK);
+                    likes--;
+                    if (likes!=1) {
+                        tvLikes.setText(String.valueOf(likes) + " likes");
+                    }
+                    else {
+                        tvLikes.setText("1 like");
+                    }
+                    int index = 0;
+                    JSONArray likers = post.getLikes();
+                    for (int i = 0; i<likers.length()-1;i++) {
+                        try {
+                            ParseUser user = (ParseUser) likers.get(i);
+                            if (user.equals(ParseUser.getCurrentUser())) {
+                                index=i;
+                                break;
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    likers.remove(index);
+                    post.setLikes(likers);
+                    post.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(com.parse.ParseException e) {
+                            Log.i("try","try");
+                        }
+                    });
+                }
+            }
+        });
         comments = new ArrayList<>();
         tvDescription = findViewById(R.id.tvDescription);
         rvComments = findViewById(R.id.rvComments);
@@ -128,6 +226,7 @@ public class PostDetails extends AppCompatActivity {
         ParseQuery<Comment> query = ParseQuery.getQuery(Comment.class);
         query.include(Comment.KEY_USER);
         query.setLimit(20);
+        query.whereEqualTo(Comment.KEY_POST,post);
         query.findInBackground(new FindCallback<Comment>() {
             @Override
             public void done(List<Comment> comments, com.parse.ParseException e) {

@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="216dp"
+        android:layout_marginTop="159dp"
         android:ems="10"
         android:hint="Username"
         tools:layout_editor_absoluteX="49dp"
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/etUsername"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="9dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textWebPassword"
@@ -39,13 +39,27 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/etPassword"
         android:layout_marginTop="35dp"
-        android:text="Login" />
+        android:backgroundTint="#009688"
+        android:text="Login"
+        android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/btnSignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnLogin"
-        android:layout_marginTop="24dp"
-        android:text="Sign Up" />
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#E91E63"
+        android:text="Sign Up"
+        android:textColor="#FFFFFF" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="227dp"
+        android:layout_height="67dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="61dp"
+        android:layout_marginEnd="82dp"
+        tools:srcCompat="@drawable/nav_logo_whiteout" />
 </RelativeLayout>

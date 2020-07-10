@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivMedia"
-        android:layout_marginStart="-32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="-35dp"
+        android:layout_marginTop="44dp"
         android:layout_marginBottom="0dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         tools:text="Look at me flexing" />
@@ -71,4 +71,22 @@
         android:layout_below="@+id/tvUsername"
         android:layout_marginTop="17dp"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/ivLike"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_below="@+id/ivMedia"
+        android:layout_marginTop="3dp"
+        tools:srcCompat="@drawable/ufi_heart" />
+
+    <TextView
+        android:id="@+id/tvLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ivLike"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toEndOf="@+id/ivLike"
+        tools:text="70 likes" />
 </RelativeLayout>

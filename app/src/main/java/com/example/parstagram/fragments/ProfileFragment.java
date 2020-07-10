@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram.EndlessRecyclerViewScrollListener;
+import com.example.parstagram.LoginActivity;
 import com.example.parstagram.Post;
 import com.example.parstagram.R;
 import com.example.parstagram.SquarePostsAdapter;
@@ -58,6 +59,7 @@ public class ProfileFragment extends Fragment {
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private File photoFile;
     private String photoFileName = "photo.jpg";
+    private Button btnSignOut;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -80,6 +82,14 @@ public class ProfileFragment extends Fragment {
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
         ParseFile file = ParseUser.getCurrentUser().getParseFile("ProfileImage");
         Glide.with(getContext()).load(file.getUrl()).circleCrop().into(ivProfileImage);
+        btnSignOut = view.findViewById(R.id.btnSignOut);
+        btnSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ParseUser.getCurrentUser().logOut();
+                //how would you finish?
+            }
+        });
         btnChange = view.findViewById(R.id.btnChange);
         btnChange.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,13 +97,11 @@ public class ProfileFragment extends Fragment {
                launchCamera();
                ParseUser.getCurrentUser().put("ProfileImage",new ParseFile(photoFile));
                ParseUser.getCurrentUser().saveInBackground();
-               ParseFile file = ParseUser.getCurrentUser().getParseFile("ProfileImage");
             }
         });
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
         adapter = new SquarePostsAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvPosts.setLayoutManager(new GridLayoutManager(getContext(),3));
         queryPosts();
     }
@@ -103,7 +111,6 @@ public class ProfileFragment extends Fragment {
         query.include(Post.KEY_USER);
         query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
         query.setLimit(20);
-
         query.addDescendingOrder(Post.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Post>() {
             @Override
@@ -146,8 +153,7 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                ParseFile file = ParseUser.getCurrentUser().getParseFile("ProfileImage");
-                Glide.with(getContext()).load(file.getUrl()).circleCrop().into(ivProfileImage);
+                Glide.with(getContext()).load(photoFile.getAbsolutePath()).circleCrop().into(ivProfileImage);
             } else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }

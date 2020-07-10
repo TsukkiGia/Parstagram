@@ -5,8 +5,10 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import org.json.JSONArray;
 import org.parceler.Parcel;
 
+import java.sql.Array;
 import java.util.Date;
 
 @ParseClassName("Post")
@@ -16,8 +18,17 @@ public class Post extends ParseObject {
     public static final String KEY_USER = "user";
     public static final String KEY_IMAGE = "image";
     public static final String KEY_CREATED_AT = "createdAt";
+    public static final String KEY_LIKES = "likers";
 
     public Post() {
+    }
+
+    public JSONArray getLikes(){
+        return getJSONArray(KEY_LIKES);
+    }
+
+    public void setLikes(JSONArray Likes) {
+        put(KEY_LIKES,Likes);
     }
 
     public Date getTime() {
