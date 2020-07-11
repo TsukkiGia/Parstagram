@@ -24,6 +24,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         this.comments = comments;
         this.context = context;
     }
+
     public void clear() {
         comments.clear();
         notifyDataSetChanged();
@@ -34,6 +35,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         comments.addAll(list);
         notifyDataSetChanged();
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

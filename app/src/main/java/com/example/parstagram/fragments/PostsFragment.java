@@ -31,6 +31,7 @@ import java.util.List;
 
  */
 public class PostsFragment extends Fragment {
+    private static final int MAX_POSTS = 20;
     RecyclerView rvPosts;
     private EndlessRecyclerViewScrollListener scrollListener;
     public static final String TAG = "PostsFragment";
@@ -66,8 +67,8 @@ public class PostsFragment extends Fragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
                 query.include(Post.KEY_USER);
-                query.setSkip(page*20);
-                query.setLimit(20);
+                query.setSkip(page*MAX_POSTS);
+                query.setLimit(MAX_POSTS);
                 query.addDescendingOrder(Post.KEY_CREATED_AT);
                 query.findInBackground(new FindCallback<Post>() {
                     @Override
@@ -101,7 +102,7 @@ public class PostsFragment extends Fragment {
     protected void queryPosts() {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
-        query.setLimit(20);
+        query.setLimit(MAX_POSTS);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Post>() {
             @Override

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,8 @@ public class PostDetails extends AppCompatActivity {
     ImageView ivLike;
     TextView tvLikes;
     TextView tvDateTime;
+    ProgressBar pbLoading;
+    ImageView ivGoBack;
     int likes;
 
     @Override
@@ -55,9 +58,19 @@ public class PostDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
         post = Parcels.unwrap(getIntent().getParcelableExtra(Post.class.getSimpleName()));
+        ivGoBack = findViewById(R.id.ivGoBack);
+        ivGoBack.setColorFilter(Color.BLACK);
+        ivGoBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         ivLike = findViewById(R.id.ivLike);
         tvLikes = findViewById(R.id.tvLikes);
         tvDateTime = findViewById(R.id.tvDateTime);
+        pbLoading = findViewById(R.id.pbLoading);
+        pbLoading.setVisibility(View.VISIBLE);
         Boolean didILike=false;
         JSONArray likers = post.getLikes();
         for (int i = 0; i<likers.length();i++) {
@@ -241,6 +254,7 @@ public class PostDetails extends AppCompatActivity {
                 adapter.clear();
                 adapter.addAll(comments);
                 adapter.notifyDataSetChanged();
+                pbLoading.setVisibility(View.INVISIBLE);
             }
         });
     }

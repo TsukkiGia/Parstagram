@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,16 +30,24 @@ public class ProfileDetails extends AppCompatActivity {
     TextView tvUsername;
     ImageView ivProfileImage;
     public static final String TAG = "Profile of User";
+    ImageView ivGoBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("Help","im here");
         user = Parcels.unwrap(getIntent().getParcelableExtra(ParseUser.class.getSimpleName()));
         setContentView(R.layout.activity_profile_details);
         rvSquarePosts = findViewById(R.id.rvSquarePosts);
         ivProfileImage = findViewById(R.id.ivProfileImage);
         tvUsername = findViewById(R.id.tvUsername);
+        ivGoBack = findViewById(R.id.ivGoBack);
+        ivGoBack.setColorFilter(Color.BLACK);
+        ivGoBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         Glide.with(ProfileDetails.this).load(user.getParseFile("ProfileImage").getUrl()).circleCrop().into(ivProfileImage);
         tvUsername.setText(user.getUsername());
         posts = new ArrayList<>();

@@ -96,6 +96,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivProfileImage.setOnClickListener(this);
             ivLike.setOnClickListener(this);
             ivComment.setOnClickListener(this);
+            tvUsername.setOnClickListener(this);
             ivLike.setTag(R.drawable.ufi_heart);
         }
         private static final int SECOND_MILLIS = 1000;
@@ -107,7 +108,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
             SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
             sf.setLenient(true);
-
             try {
                 long time = sf.parse(rawJsonDate).getTime();
                 long now = System.currentTimeMillis();
@@ -184,7 +184,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 i.putExtra(Post.class.getSimpleName(), Parcels.wrap(post));
                 context.startActivity(i);
             }
-            if (view.getId()==ivProfileImage.getId()) {
+            if (view.getId()==ivProfileImage.getId() || view.getId()==tvUsername.getId()) {
                 ParseUser user = posts.get(position).getUser();
                 Intent i = new Intent(context, ProfileDetails.class);
                 i.putExtra(ParseUser.class.getSimpleName(), Parcels.wrap(user));

@@ -17,7 +17,20 @@
         android:layout_marginBottom="0dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         tools:text="Look at me flexing" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <ProgressBar
+            android:id="@+id/pbLoading"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="258dp"
+            android:layout_marginEnd="157dp"
+            android:visibility="visible" />
+    </RelativeLayout>
     <EditText
         android:id="@+id/etComment"
         android:layout_width="281dp"
@@ -102,4 +115,13 @@
         android:textColor="#000000"
         android:textStyle="bold"
         tools:text="3 h" />
+    <ImageView
+        android:id="@+id/ivGoBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:src="@android:drawable/ic_delete" />
 </RelativeLayout>
