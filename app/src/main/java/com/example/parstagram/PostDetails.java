@@ -47,6 +47,7 @@ public class PostDetails extends AppCompatActivity {
     Button btnComment;
     ImageView ivLike;
     TextView tvLikes;
+    TextView tvDateTime;
     int likes;
 
     @Override
@@ -56,6 +57,7 @@ public class PostDetails extends AppCompatActivity {
         post = Parcels.unwrap(getIntent().getParcelableExtra(Post.class.getSimpleName()));
         ivLike = findViewById(R.id.ivLike);
         tvLikes = findViewById(R.id.tvLikes);
+        tvDateTime = findViewById(R.id.tvDateTime);
         Boolean didILike=false;
         JSONArray likers = post.getLikes();
         for (int i = 0; i<likers.length();i++) {
@@ -146,6 +148,7 @@ public class PostDetails extends AppCompatActivity {
             }
         });
         comments = new ArrayList<>();
+        tvDateTime.setText(getRelativeTimeAgo(post.getCreatedAt().toString()));
         tvDescription = findViewById(R.id.tvDescription);
         rvComments = findViewById(R.id.rvComments);
         ivProfile = findViewById(R.id.ivProfileImage);
@@ -158,7 +161,6 @@ public class PostDetails extends AppCompatActivity {
         tvUsername.setText(post.getUser().getUsername());
         etComment = findViewById(R.id.etComment);
         tvDescription.setText(post.getDescription());
-        ParseFile image = post.getImage();
         btnComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

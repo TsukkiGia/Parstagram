@@ -3,8 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_home"
-        android:icon="@drawable/instagram_home_filled_24"
+        android:icon="@drawable/instagram_home_outline_24"
         android:title="Home"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_vector_search"
+        android:title="Post"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_compose"
@@ -12,8 +17,13 @@
         android:title="Post"
         app:showAsAction="always" />
     <item
+        android:id="@+id/action_likes"
+        android:icon="@drawable/ufi_heart"
+        android:title="Post"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_profile"
-        android:icon="@drawable/ic_baseline_person_24"
+        android:icon="@drawable/instagram_user_outline_24"
         android:title="My Page"
         app:showAsAction="always" />
 </menu>

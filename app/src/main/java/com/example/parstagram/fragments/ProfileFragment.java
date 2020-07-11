@@ -90,7 +90,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ParseUser.getCurrentUser().logOut();
-                //how would you finish
                 Intent i = new Intent(getContext(), LoginActivity.class);
                 getContext().startActivity(i);
                 getActivity().finish();

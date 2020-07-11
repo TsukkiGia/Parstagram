@@ -55,15 +55,18 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder{
         private ImageView ivProfileImage;
         private TextView  tvComment;
+        private TextView tvUsername;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvComment = itemView.findViewById(R.id.tvComment);
+            tvUsername = itemView.findViewById(R.id.tvUsername);
         }
 
         public void bind(Comment comment) {
             tvComment.setText(comment.getText());
+            tvUsername.setText(comment.getUser().getUsername());
             Glide.with(context).load(comment.getUser().getParseFile("ProfileImage").getUrl()).circleCrop().into(ivProfileImage);
         }
     }
